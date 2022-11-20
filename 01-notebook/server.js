@@ -4,7 +4,7 @@ var escape_html = require('escape-html');
 var serveStatic = require('serve-static');
 
 var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database(':memory:');
+var db = new sqlite3.Database('notes.sqlite');
 
 
 // Serve up public folder 
