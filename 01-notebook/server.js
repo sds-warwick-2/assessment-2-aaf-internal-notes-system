@@ -46,6 +46,7 @@ var server = http.createServer(function (req, res) {
             req.on('end', function () {
                 var form = querystring.parse(body);
                 db.exec('INSERT INTO notes VALUES ("' + form.note + '");', function (err) {
+                    console.error(err);
                     res.writeHead(201, {'Content-Type': 'text/html'});
                     renderNotes(req, res);
                 });
