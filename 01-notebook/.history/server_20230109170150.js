@@ -26,7 +26,7 @@ function renderNotes(req, res) {
                   '</form>');
         res.write('<ul class="notes">');
         rows.forEach(function (row) {
-            res.write('<li>' + escape_html(row.text) + '<br><button>Delete</button>' + '</li>');  // line for printing the notes
+            res.write('<li>' + escape_html(row.text) + 'hi' +'</li>');
         });
         res.end('</ul>');
     });
