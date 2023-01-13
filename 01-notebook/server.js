@@ -2,6 +2,8 @@ var http = require('http');
 var querystring = require('querystring');
 var escape_html = require('escape-html');
 var serveStatic = require('serve-static');
+var url = require('url')
+
 
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('notes.sqlite');
@@ -24,9 +26,17 @@ function renderNotes(req, res) {
                   '<label>Note: <input name="note" value=""></label>' +
                   '<button>Add</button>' +
                   '</form>');
+
         res.write('<ul class="notes">');
-        rows.forEach(function (row) {
-            res.write('<li>' + escape_html(row.text) + '<br><button>Delete</button>' + '</li>');  // line for printing the notes
+        
+        rows.forEach(function (row) {     
+            res.write('<form method="POST" action="/delete/' + row.id + '">' +
+                    '<li>' +
+                    escape_html(row.text) +
+                    '<br/>' +
+                    '<button type="submit">Delete</button>' +
+                    '</li>' +
+                    '</form>');
         });
         res.end('</ul>');
     });
@@ -37,6 +47,25 @@ var server = http.createServer(function (req, res) {
         if (req.method == 'GET') {
             res.writeHead(200, {'Content-Type': 'text/html'});
             renderNotes(req, res);
+        }
+        else if (req.method == 'POST' && url.parse(req.url).pathname.includes('/delete')) {
+            let noteId = url.parse(req.url).pathname.replace('/delete/', '')
+            var body = '';
+            req.on('data', function (data) {
+                body += data;
+                console.log(body)
+            });
+            req.on('end', function () {
+                var form = querystring.parse(body);
+                db.exec('DELETE FROM notes WHERE rowid=' + noteId + ';', function (err){
+                    if (err) {
+                        console.log(err)
+                        res.writeHead(201, {'Content-Type': 'text/html'});
+                        renderNotes(req, res);
+                    }
+                })
+            });
+            
         }
         else if (req.method == 'POST') {
             var body = '';
@@ -50,6 +79,7 @@ var server = http.createServer(function (req, res) {
                     res.writeHead(201, {'Content-Type': 'text/html'});
                     renderNotes(req, res);
                 });
+                renderNotes(req, res);
             });
         }
     });

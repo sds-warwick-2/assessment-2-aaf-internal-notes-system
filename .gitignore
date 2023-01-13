@@ -1,3 +1,4 @@
 node_modules
 /images
 .sqlite
+/01-notebook/.history
