@@ -30,11 +30,11 @@ function renderNotes(req, res) {
         res.write('<ul class="notes">');
         
         rows.forEach(function (row) {     
-            res.write('<form method="POST" action="/delete/' + row.id + '">' +
+            res.write('<form method="POST">' +
                     '<li>' +
                     escape_html(row.text) +
                     '<br/>' +
-                    '<button type="submit">Delete</button>' +
+                    '<button type="submit" name="delete", value="' + row.id + '">Delete</button>' +
                     '</li>' +
                     '</form>');
         });
@@ -48,25 +48,6 @@ var server = http.createServer(function (req, res) {
             res.writeHead(200, {'Content-Type': 'text/html'});
             renderNotes(req, res);
         }
-        else if (req.method == 'POST' && url.parse(req.url).pathname.includes('/delete')) {
-            let noteId = url.parse(req.url).pathname.replace('/delete/', '')
-            var body = '';
-            req.on('data', function (data) {
-                body += data;
-                console.log(body)
-            });
-            req.on('end', function () {
-                var form = querystring.parse(body);
-                db.exec('DELETE FROM notes WHERE rowid=' + noteId + ';', function (err){
-                    if (err) {
-                        console.log(err)
-                        res.writeHead(201, {'Content-Type': 'text/html'});
-                        renderNotes(req, res);
-                    }
-                })
-            });
-            
-        }
         else if (req.method == 'POST') {
             var body = '';
             req.on('data', function (data) {
@@ -74,11 +55,24 @@ var server = http.createServer(function (req, res) {
             });
             req.on('end', function () {
                 var form = querystring.parse(body);
-                db.exec('INSERT INTO notes VALUES ("' + form.note + '");', function (err) {
-                    console.error(err);
-                    res.writeHead(201, {'Content-Type': 'text/html'});
-                    renderNotes(req, res);
-                });
+                var stringForm = querystring.stringify(form);
+                console.log(stringForm);
+                if (stringForm.includes("delete")) {
+                    console.log("delete");
+                    var noteId = stringForm.replace('delete=', '');
+                    db.exec('DELETE FROM notes WHERE rowid=' + noteId + ';', function (err) {
+                        console.log(err);
+                        res.writeHead(201, {'Content-Type': 'text/html'});
+                        renderNotes(req, res);
+                    })
+                }
+                else {
+                    db.exec('INSERT INTO notes VALUES ("' + form.note + '");', function (err) {
+                        console.error(err);
+                        res.writeHead(201, {'Content-Type': 'text/html'});
+                        renderNotes(req, res);
+                    });
+                }
                 renderNotes(req, res);
             });
         }
