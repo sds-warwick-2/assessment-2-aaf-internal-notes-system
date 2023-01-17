@@ -1,4 +1,5 @@
 node_modules
 /images
 .sqlite
-/01-notebook/.history
+/.history/
+/01-notebook/.history/

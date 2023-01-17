@@ -55,9 +55,18 @@ var server = http.createServer(function (req, res) {
             });
             req.on('end', function () {
                 var form = querystring.parse(body);
+                console.log(form);
+                console.log(form.delete)
                 var stringForm = querystring.stringify(form);
                 console.log(stringForm);
-                if (stringForm.includes("delete")) {
+                if (stringForm.includes("note")) {
+                    db.exec('INSERT INTO notes VALUES ("' + form.note + '");', function (err) {
+                        console.error(err);
+                        res.writeHead(201, {'Content-Type': 'text/html'});
+                        renderNotes(req, res);
+                    });
+                }
+                else {
                     console.log("delete");
                     var noteId = stringForm.replace('delete=', '');
                     db.exec('DELETE FROM notes WHERE rowid=' + noteId + ';', function (err) {
@@ -65,13 +74,6 @@ var server = http.createServer(function (req, res) {
                         res.writeHead(201, {'Content-Type': 'text/html'});
                         renderNotes(req, res);
                     })
-                }
-                else {
-                    db.exec('INSERT INTO notes VALUES ("' + form.note + '");', function (err) {
-                        console.error(err);
-                        res.writeHead(201, {'Content-Type': 'text/html'});
-                        renderNotes(req, res);
-                    });
                 }
                 renderNotes(req, res);
             });
