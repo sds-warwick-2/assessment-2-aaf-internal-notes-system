@@ -2,6 +2,8 @@ var http = require('http');
 var querystring = require('querystring');
 var escape_html = require('escape-html');
 var serveStatic = require('serve-static');
+var url = require('url')
+
 
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('notes.sqlite');
@@ -24,9 +26,17 @@ function renderNotes(req, res) {
                   '<label>Note: <input name="note" value=""></label>' +
                   '<button>Add</button>' +
                   '</form>');
+
         res.write('<ul class="notes">');
-        rows.forEach(function (row) {
-            res.write('<li>' + escape_html(row.text) + '</li>');
+        
+        rows.forEach(function (row) {     
+            res.write('<form method="POST">' +
+                    '<li>' +
+                    escape_html(row.text) +
+                    '<br/>' +
+                    '<button type="submit" name="delete", value="' + row.id + '">Delete</button>' +
+                    '</li>' +
+                    '</form>');
         });
         res.end('</ul>');
     });
@@ -45,11 +55,23 @@ var server = http.createServer(function (req, res) {
             });
             req.on('end', function () {
                 var form = querystring.parse(body);
-                db.exec('INSERT INTO notes VALUES ("' + form.note + '");', function (err) {
-                    console.error(err);
-                    res.writeHead(201, {'Content-Type': 'text/html'});
-                    renderNotes(req, res);
-                });
+                if (form.note) {
+                    // console.log("Note Added: " + form.note); // uncomment for debugging
+                    db.exec('INSERT INTO notes VALUES ("' + form.note + '");', function (err) {
+                        // console.error(err); // uncomment for debugging
+                        res.writeHead(201, {'Content-Type': 'text/html'});
+                        renderNotes(req, res);
+                    });
+                }
+                else if (form.delete) {
+                   // console.log("Deleted Note ID: " + form.delete); // uncomment for debugging
+                   db.exec('DELETE FROM notes WHERE rowid=' + form.delete + ';', function (err) {
+                        // console.error(err); // uncomment for debugging
+                        res.writeHead(201, {'Content-Type': 'text/html'});
+                        renderNotes(req, res);
+                    })
+                }
+                renderNotes(req, res);
             });
         }
     });
