@@ -3,3 +3,4 @@ node_modules
 .sqlite
 /.history/
 /01-notebook/.history/
+/01-notebook/notes.sqlite
