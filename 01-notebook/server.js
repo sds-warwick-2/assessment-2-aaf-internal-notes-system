@@ -55,19 +55,18 @@ var server = http.createServer(function (req, res) {
             });
             req.on('end', function () {
                 var form = querystring.parse(body);
-                console.log(form);
-                console.log("Form Note: " + form.note);
-                console.log("Form Delete: " + form.delete);
                 if (form.note) {
+                    // console.log("Note Added: " + form.note); // uncomment for debugging
                     db.exec('INSERT INTO notes VALUES ("' + form.note + '");', function (err) {
-                        console.error(err);
+                        // console.error(err); // uncomment for debugging
                         res.writeHead(201, {'Content-Type': 'text/html'});
                         renderNotes(req, res);
                     });
                 }
                 else if (form.delete) {
+                   // console.log("Deleted Note ID: " + form.delete); // uncomment for debugging
                    db.exec('DELETE FROM notes WHERE rowid=' + form.delete + ';', function (err) {
-                        console.log(err);
+                        // console.error(err); // uncomment for debugging
                         res.writeHead(201, {'Content-Type': 'text/html'});
                         renderNotes(req, res);
                     })
