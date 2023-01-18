@@ -56,7 +56,6 @@ var server = http.createServer(function (req, res) {
             req.on('end', function () {
                 var form = querystring.parse(body);
                 console.log(form);
-                var stringForm = querystring.stringify(form);
                 console.log("Form Note: " + form.note);
                 console.log("Form Delete: " + form.delete);
                 if (form.note) {
@@ -67,9 +66,7 @@ var server = http.createServer(function (req, res) {
                     });
                 }
                 else if (form.delete) {
-                    console.log("delete");
-                    var noteId = stringForm.replace('delete=', '');
-                    db.exec('DELETE FROM notes WHERE rowid=' + noteId + ';', function (err) {
+                   db.exec('DELETE FROM notes WHERE rowid=' + form.delete + ';', function (err) {
                         console.log(err);
                         res.writeHead(201, {'Content-Type': 'text/html'});
                         renderNotes(req, res);
