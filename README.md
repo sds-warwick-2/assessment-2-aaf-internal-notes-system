@@ -3,4 +3,7 @@ ACME Automotive Finance's internal notes system
 
 ---
 
-Often in many orgs you'll get handed repos like this, with little to no docs and just told to "sort it"
+## Setup:
+ - Run ```npm install``` to install the required dependencies.
+
+ - Run ```npm start``` to start the server.js program.
