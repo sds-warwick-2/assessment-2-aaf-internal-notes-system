@@ -54,7 +54,7 @@ jobs:
         run: |
           npm audit fix
 
-pulumi:
+  pulumi:
     runs-on: ubuntu-latest
     steps:
       - name: Configure AWS Credentials
