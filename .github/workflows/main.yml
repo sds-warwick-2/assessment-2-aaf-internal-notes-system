@@ -32,10 +32,10 @@ jobs:
           head: HEAD
           extra_args: --debug --only-verified
       
-      - name: install nodejs
-        uses: actions/setup-node@v1
-        with:
-          node-version: 14.x          
+      # - name: install nodejs
+      #   uses: actions/setup-node@v1
+      #   with:
+      #     node-version: 14.x          
 
       # - name: setup nodejs
       #   uses: actions/setup-nodejs@v2.5.2
@@ -71,11 +71,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Node LTS
-        uses: actions/setup-nodejs@v3
-        with:
-          node-version: lts/*
-          cache: yarn
+      # - name: Setup Node LTS
+      #   uses: actions/setup-nodejs@v3
+      #   with:
+      #     node-version: lts/*
+      #     cache: yarn
 
       - name: Installing dependencies
         run: yarn install
