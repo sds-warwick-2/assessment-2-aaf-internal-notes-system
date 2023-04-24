@@ -33,9 +33,9 @@ jobs:
           extra_args: --debug --only-verified
 
       - name: setup nodejs
-        uses: actions/setup-node@v3
+        uses: actions/setup-nodejs@v2.5.2
         with:
-          node-version: 18.x
+          node-version: '18.x'
           registry-url: "https://registry.npmjs.org"
           # cache: npm
 
