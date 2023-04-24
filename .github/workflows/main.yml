@@ -32,12 +32,12 @@ jobs:
           head: HEAD
           extra_args: --debug --only-verified
 
-      - name: setup nodejs
-        uses: actions/setup-nodejs@v2.5.2
-        with:
-          node-version: '18.x'
-          registry-url: "https://registry.npmjs.org"
-          # cache: npm
+      # - name: setup nodejs
+      #   uses: actions/setup-nodejs@v2.5.2
+      #   with:
+      #     node-version: '18.x'
+      #     registry-url: "https://registry.npmjs.org"
+      #     # cache: npm
 
       - name: install deps
 #        working-directory: 01-notebook
