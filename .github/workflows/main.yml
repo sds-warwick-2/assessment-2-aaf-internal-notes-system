@@ -31,6 +31,11 @@ jobs:
           base: ${{ github.event.repository.default_branch }}
           head: HEAD
           extra_args: --debug --only-verified
+      
+      - name: install nodejs
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x          
 
       # - name: setup nodejs
       #   uses: actions/setup-nodejs@v2.5.2
@@ -38,6 +43,9 @@ jobs:
       #     node-version: '18.x'
       #     registry-url: "https://registry.npmjs.org"
       #     # cache: npm
+
+      - name: install pulumi cli
+        run: npm install -g pulumi
 
       - name: install deps
 #        working-directory: 01-notebook
