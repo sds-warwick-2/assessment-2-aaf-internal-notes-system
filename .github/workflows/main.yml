@@ -44,9 +44,6 @@ jobs:
       #     registry-url: "https://registry.npmjs.org"
       #     # cache: npm
 
-      - name: install pulumi cli
-        run: npm install -g pulumi
-
       - name: install deps
 #        working-directory: 01-notebook
         run: |
