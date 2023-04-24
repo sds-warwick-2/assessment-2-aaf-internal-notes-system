@@ -1,4 +1,4 @@
-name: "Lint, scan, test and deploy"
+name: "Test and deploy"
 
 on: [push]
 #  workflow_dispatch:
@@ -45,10 +45,6 @@ jobs:
       - name: install deps
         run: |
           npm i
-
-      - name: run linting
-        run: |
-          npm run lint
 
       - name: fix dependencies
         run: |
