@@ -101,7 +101,7 @@ jobs:
         working-directory: infra
       - uses: pulumi/actions@v3
         with:
-          command: up
+          command: preview
           stack-name: dev
           work-dir: infra
         env:
