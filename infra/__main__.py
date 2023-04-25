@@ -53,7 +53,7 @@ sg = aws.ec2.SecurityGroup(
 ami = aws.ec2.get_ami(
 	most_recent="true",
 	owners=["amazon"],
-	filters=[{"name": "name", "values": ["Amazon Linux 2 *"]}]
+	filters=[{"name": "name", "values": ["amzn2-ami-hvm-*-x86_64-gp2"]}]
 )
 
 user_data = """
