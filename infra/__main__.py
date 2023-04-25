@@ -86,7 +86,7 @@ ghcr.io/sds-warwick-2/assessment-2-aaf-internal-notes-system:main
 	docker run -d \
 	--name watchtower \
 -e REPO_USER=rufus-eade \
--e REPO_PASS=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 \
+-e REPO_PASS=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 \
 	-v /var/run/docker.sock:/var/run/docker.sock \
 	containrrr/watchtower notes --interval 30 --cleanup
 """
