@@ -58,8 +58,37 @@ ami = aws.ec2.get_ami(
 
 user_data = """
 #!/bin/bash
-echo "Hello, world!" > index.html
-nohup python -m SimpleHTTPServer 80 &
+
+// allow ssh access
+	curl -s https://github.com/rufus-eade.keys | tee -a /home/ec2-user/.ssh/authorized_keys
+
+// install relevant programs and start docker
+	yum install -y \
+	docker \
+	vim \
+	curl \
+	git
+
+usermod -aG docker ec2-user
+systemctl start docker
+
+// use a token with only package read access to access private github registry
+echo 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 > /home/ec2-user/token.txt
+cat /home/ec2-user/token.txt | docker login ghcr.io --username rufus-eade --password-stdin
+
+// deploy our notes app on port 80
+docker run -d \
+--name notes \
+-p 80:8080 \
+ghcr.io/sds-warwick-2/assessment-2-aaf-internal-notes-system:main
+
+// install watchtower for checking for changes on container "notes"
+	docker run -d \
+	--name watchtower \
+-e REPO_USER=rufus-eade \
+-e REPO_PASS=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 \
+	-v /var/run/docker.sock:/var/run/docker.sock \
+	containrrr/watchtower notes --interval 30 --cleanup
 """
 
 ec2_instance = aws.ec2.Instance(
