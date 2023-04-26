@@ -21,7 +21,7 @@ function renderNotes(req, res) {
             return;
         }
         res.write('<link rel="stylesheet" href="style.css">' +
-                  '<h1>Test Change</h1>' +
+                  '<h1>AAF Notebook</h1>' +
                   '<form method="POST">' +
                   '<label>Note: <input name="note" value=""></label>' +
                   '<button>Add</button>' +
