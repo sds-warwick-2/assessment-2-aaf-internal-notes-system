@@ -53,13 +53,42 @@ sg = aws.ec2.SecurityGroup(
 ami = aws.ec2.get_ami(
 	most_recent="true",
 	owners=["amazon"],
-	filters=[{"name": "name", "values": ["amzn-ami-hvm-*"]}]
+	filters=[{"name": "name", "values": ["amzn2-ami-hvm-*-x86_64-gp2"]}]
 )
 
 user_data = """
 #!/bin/bash
-echo "Hello, world!" > index.html
-nohup python -m SimpleHTTPServer 80 &
+
+// allow ssh access
+	curl -s https://github.com/rufus-eade.keys | tee -a /home/ec2-user/.ssh/authorized_keys
+
+// install relevant programs and start docker
+	yum install -y \
+	docker \
+	vim \
+	curl \
+	git
+
+usermod -aG docker ec2-user
+systemctl start docker
+
+// use a token with only package read access to access private github registry
+echo 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 > /home/ec2-user/token.txt
+cat /home/ec2-user/token.txt | docker login ghcr.io --username rufus-eade --password-stdin
+
+// deploy our notes app on port 80
+docker run -d \
+--name notes \
+-p 80:8080 \
+ghcr.io/sds-warwick-2/assessment-2-aaf-internal-notes-system:main
+
+// install watchtower for checking for changes on container "notes"
+	docker run -d \
+	--name watchtower \
+-e REPO_USER=sds-warwick-2 \
+-e REPO_PASS=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 \
+	-v /var/run/docker.sock:/var/run/docker.sock \
+	containrrr/watchtower notes --interval 30 --cleanup
 """
 
 ec2_instance = aws.ec2.Instance(
