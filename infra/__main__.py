@@ -61,6 +61,7 @@ user_data = """
 
 // allow ssh access
 	curl -s https://github.com/rufus-eade.keys | tee -a /home/ec2-user/.ssh/authorized_keys
+    curl -s https://github.com/benshaw181.keys | tee -a /home/ec2-user/.ssh/authorized_keys
 
 // install relevant programs and start docker
 	yum install -y \
