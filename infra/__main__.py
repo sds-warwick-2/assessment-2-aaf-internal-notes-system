@@ -73,7 +73,7 @@ usermod -aG docker ec2-user
 systemctl start docker
 
 // use a token with only package read access to access private github registry
-echo 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 > /home/ec2-user/token.txt
+echo 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 > /home/ec2-user/token.txt
 cat /home/ec2-user/token.txt | docker login ghcr.io --username rufus-eade --password-stdin
 
 // deploy our notes app on port 80
@@ -85,8 +85,8 @@ ghcr.io/sds-warwick-2/assessment-2-aaf-internal-notes-system:main
 // install watchtower for checking for changes on container "notes"
 	docker run -d \
 	--name watchtower \
--e REPO_USER=rufus-eade \
--e REPO_PASS=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 \
+-e REPO_USER=sds-warwick-2 \
+-e REPO_PASS=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 \
 	-v /var/run/docker.sock:/var/run/docker.sock \
 	containrrr/watchtower notes --interval 30 --cleanup
 """
