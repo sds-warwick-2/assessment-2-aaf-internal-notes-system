@@ -60,15 +60,15 @@ user_data = """
 #!/bin/bash
 
 // allow ssh access
-	curl -s https://github.com/rufus-eade.keys | tee -a /home/ec2-user/.ssh/authorized_keys
-    curl -s https://github.com/benshaw181.keys | tee -a /home/ec2-user/.ssh/authorized_keys
+curl -s https://github.com/rufus-eade.keys | tee -a /home/ec2-user/.ssh/authorized_keys
+curl -s https://github.com/benshaw181.keys | tee -a /home/ec2-user/.ssh/authorized_keys
 
 // install relevant programs and start docker
-	yum install -y \
-	docker \
-	vim \
-	curl \
-	git
+yum install -y \
+docker \
+vim \
+curl \
+git
 
 usermod -aG docker ec2-user
 systemctl start docker
@@ -84,16 +84,16 @@ docker run -d \
 ghcr.io/sds-warwick-2/assessment-2-aaf-internal-notes-system:main
 
 // install watchtower for checking for changes on container "notes"
-	docker run -d \
-	--name watchtower \
+docker run -d \
+--name watchtower \
 -e REPO_USER=sds-warwick-2 \
 -e REPO_PASS=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 \
-	-v /var/run/docker.sock:/var/run/docker.sock \
-	containrrr/watchtower notes --interval 30 --cleanup
+-v /var/run/docker.sock:/var/run/docker.sock \
+containrrr/watchtower notes --interval 30 --cleanup
 """
 
 ec2_instance = aws.ec2.Instance(
-	"ec2-tutorial",
+	"ec2-instance",
 	instance_type="t2.micro",
 	vpc_security_group_ids=[sg.id],
 	ami=ami.id,
